@@ -12,17 +12,20 @@ public class FuelPlan {
     double finalReserve;
     double additional;
     double totalHours;
+    double altTotalHours;
     double tripDistance;
     TimeMS time;
     double cruiseSpeed;
     double fuelBurn;
+    double alternateDistance;
+    double blockFuel;
 
 
     public FuelPlan(Scanner scnr) {
         String userInput = null;
 
         while(true){
-            System.out.println("Taxi fuel (gallons): ");
+            System.out.print("Taxi fuel (gallons): ");
             userInput = scnr.nextLine();
 
             if(userInput.equals("")){
@@ -42,7 +45,7 @@ public class FuelPlan {
 
         while(true){
 
-            System.out.println("\nTrip Distance (NM): ");
+            System.out.print("\nTrip Distance (NM): ");
             userInput = scnr.nextLine();
 
             try{
@@ -57,7 +60,7 @@ public class FuelPlan {
 
         while(true){
 
-            System.out.println("\nEstimated Cruise Speed (gs)(knots): ");
+            System.out.print("\nEstimated Cruise Speed (gs)(knots): ");
             userInput = scnr.nextLine();
 
             try{
@@ -71,7 +74,7 @@ public class FuelPlan {
         }
 
         while(true){
-            System.out.println("\nAircraft fuel burn rate (galons/hr): ");
+            System.out.print("\nAircraft fuel burn rate (galons/hr): ");
             userInput = scnr.nextLine();
 
             try{
@@ -84,15 +87,52 @@ public class FuelPlan {
             }
         }
 
+        while(true){
+            System.out.print("Distance from destination to alternate airport (NM): ");
+            userInput = scnr.nextLine();
+
+            if(userInput.equals("")){
+                alternateDistance = 0;
+                break;
+            }
+
+            try{
+                alternateDistance = Double.parseDouble(userInput);
+                break;
+            }
+            catch (NumberFormatException except) {
+                System.out.println("Please enter a valid distance in nautical miles.");
+                continue;
+            }
+        }
+
         // Calculate estimated trip time
         totalHours = tripDistance / cruiseSpeed;
         time = new TimeMS(totalHours);
 
         // Calculate trip fuel
-        trip = Math.ceil(fuelBurn * totalHours);
+        trip = fuelBurn * totalHours;
 
         System.out.printf("Trip Time: %d:%d\n", time.hours(), time.minutes());
         System.out.printf("Trip Fuel: %.2f\n", trip);
+
+        //Calculate contingency fuel
+        contingency = Math.ceil(trip * 0.05);
+
+        altTotalHours = alternateDistance / cruiseSpeed;
+        alternate = altTotalHours * fuelBurn;
+
+        System.out.printf("Alternate Fuel: %.2f\n", alternate);
+
+        // Calculate final reserve based on cruise fuel burn estimate.
+        finalReserve = 0.75 * fuelBurn;
+
+        System.out.printf("Final Reserve: %.2f\n", finalReserve);
+
+        // Calculate total (block fuel)
+        blockFuel = taxi + trip + contingency + alternate + finalReserve;
+
+        System.out.printf("Block Fuel: %.2f", blockFuel);
 
 
     }
