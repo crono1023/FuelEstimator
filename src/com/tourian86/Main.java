@@ -75,7 +75,7 @@ public class Main {
         String userInput;
         boolean inputValid = false;
         while (!inputValid) {
-            System.out.print("Current fuel level(Gallons): ");
+            System.out.print("\n\nCurrent fuel level(Gallons): ");
             userInput = scnr.nextLine();
             try {
                 currentFuel = Double.parseDouble(userInput);
@@ -137,11 +137,11 @@ public class Main {
         range = (short)(cruiseSpeedKnots * rawHours);
 
         if(hours > 0)
-            System.out.printf("%d hour(s)\n", hours);
-        System.out.printf("%d minute(s)\n",minutes);
+            System.out.printf("\n\n%d hour(s) ", hours);
+        System.out.printf("%d minute(s) ",minutes);
         System.out.printf("%d second(s)\n", seconds);
 
-        System.out.printf("Range: %d NM", range);
+        System.out.printf("Approximate Range: %d NM\n\n", range);
 
     }
     
