@@ -11,9 +11,6 @@ public class Main {
         double estimateFuelBurn = 0;
         double cruiseSpeedKnots = 0;
 
-        //Todo implement
-        double reserve = 0;
-        double taxiAndTakeoffFuel = 0;
 
         double time;
         double rawHours;
@@ -21,7 +18,60 @@ public class Main {
         short minutes;
         short seconds;
         short range;
+        String userInput;
+        
+        printMenu();
+        System.out.print("Enter selection: ");
+        userInput = scnr.nextLine();
+        if (userInput == "1")
+            estimateFuelNeeded(scnr);
+        else if (userInput == "2")
+            estimateFlightTime(scnr);
+        
 
+
+    }
+    public static void printBadInputMsg(){
+        System.out.println("Enter a valid number.");
+    }
+
+    private static double distanceToHours(double distance, double cruiseSpeed){
+        return distance/cruiseSpeed;
+    }
+
+    private static int timeToGallons(double time, double fuelBurn)
+    {
+        return ((int)(time * fuelBurn)+1);
+    }
+
+
+
+    private static double gallonsToHours(double gallons, double fuelBurn)
+    {
+        return gallons/fuelBurn;
+    }
+
+
+    
+    private static void printMenu(){
+        System.out.print("\n\n");
+        System.out.println("=================");
+        System.out.println("==  Main Menu  ==");
+        System.out.println("=================");
+        System.out.print("\n\n");
+        System.out.println("1) Estimate Fuel Needed");
+        System.out.println("2) Estimate flight time and distance remaining");
+        System.out.print("\n\n");
+    }
+
+    private static void estimateFlightTime(Scanner scnr)
+    {
+        double currentFuel = 0;
+        double rawHours;
+        double estimateFuelBurn = 1;
+        double cruiseSpeedKnots = 0;
+        double time;
+        short hours, minutes, seconds, range;
         String userInput;
         boolean inputValid = false;
         while (!inputValid) {
@@ -93,10 +143,63 @@ public class Main {
 
         System.out.printf("Range: %d NM", range);
 
-
-
     }
-    public static void printBadInputMsg(){
-        System.out.println("Enter a valid number.");
+    
+    private static void estimateFuelNeeded(Scanner scnr){
+        double distance = 0;
+        double cruiseSpeed = 0;
+        double fuelBurn = 0;
+        int fuelNeeded;
+        double hours;
+        boolean inputValid = false;
+        String userInput;
+
+        while(!inputValid) {
+            System.out.println("\n\n");
+            System.out.print("Distance (NM): ");
+            userInput = scnr.nextLine();
+            try{
+                distance = Double.parseDouble(userInput);
+            }
+            catch (NumberFormatException except){
+                System.out.println("Error: Error parsing user input.");
+            }
+            inputValid = true;
+        }
+        inputValid = false;
+
+        while(!inputValid)
+        {
+            System.out.print("Estimated fuel burn (Gallons/hour): ");
+            userInput = scnr.nextLine();
+
+            try{
+                fuelBurn = Double.parseDouble(userInput);
+            }
+            catch (NumberFormatException except){
+                System.out.println("Error. Error parsing user input.");
+            }
+            inputValid = true;
+        }
+
+        inputValid = false;
+
+        while(!inputValid)
+        {
+            System.out.print("\nEstimated Cruise Speed (knots): ");
+            userInput = scnr.nextLine();
+
+            try {
+                cruiseSpeed = Double.parseDouble(userInput);
+            }
+            catch (NumberFormatException except)
+            {
+                System.out.println("Error: Error parsing user input.");
+            }
+            inputValid = true;
+        }
+        hours = distanceToHours(distance, cruiseSpeed);
+        fuelNeeded = timeToGallons(hours, fuelBurn);
+        System.out.printf("\n\nFuel Needed: %d gallons\n\n", fuelNeeded);
     }
 }
